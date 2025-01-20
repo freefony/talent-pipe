@@ -1,8 +1,6 @@
 import applications from 'fixtures/applications.json';
+import { applicationStages } from '~/libs/application';
 
-const applicationStages = [
-  'applied', 'screening', 'interview_scheduled', 'technical_assessment', 'cultural_interview', 'final_interview', 'offer'
-];
 
 /**
  * Transforms an array of application data by sorting the stages based on date
