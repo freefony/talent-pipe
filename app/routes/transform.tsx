@@ -47,12 +47,12 @@ export default function Transform() {
           onClick={handleTransform}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
-          Start Transformation
+          {transforming === 'Inprogress' && 'Transforming...'}
+          {transforming === 'completed' && 'Transform Complete!'}
+          {transforming === 'failed' && 'Transform Failed'}
+          {!transforming && 'Start Transformation'}
         </button>
       )}
-      {transforming === 'Inprogress' && <p>Transforming...</p>}
-      {transforming === 'completed' && <p>Transform Complete!</p>}
-      {transforming === 'failed' && <p>Transform Failed</p>}
     </div>
   );
 }
