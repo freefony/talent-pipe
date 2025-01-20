@@ -56,3 +56,5 @@ export default function Transform() {
     </div>
   );
 }
+
+export { ErrorBoundary } from "~/components/errorboundary";
