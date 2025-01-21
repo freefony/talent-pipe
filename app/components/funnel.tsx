@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "~/libs/utils";
+import { Box } from "./box";
 
 const funnelContext = React.createContext({load: 0, segments: 0});
 
@@ -27,10 +28,11 @@ export function Funnel ({load, segments, children}: {load: number, segments: num
 type FunnelSegmentProps = {
   name: string;
   value: number;
+  sup?: React.ReactNode
   className?: string;
 };
 
-export function FunnelSegment({name, value, className}: FunnelSegmentProps) {
+export function FunnelSegment({name, value, className, sup}: FunnelSegmentProps) {
   const {load} = useFunnel();
 
   const percentage = (value / load) * 100;
@@ -40,14 +42,17 @@ export function FunnelSegment({name, value, className}: FunnelSegmentProps) {
   
   const derivedClasses = cn(
     className,
-    'dark:bg-slate-700 dark:text-white bg-slate-100 p-4  text-slate-600 text-sm flex flex-col items-center justify-center capitalize rounded-lg flex-1',
+    'dark:bg-slate-700 dark:text-white bg-slate-100 p-4  text-slate-600 text-sm flex flex-col items-center justify-center capitalize rounded-lg',
   );
 
   return (
+      <Box className="flex flex-col justify-center flex-1">
+      {sup}
       <div className={derivedClasses} style={{height: `${size}px`}}>
-      <p className="text-xs text-wrap">{name}</p>
+      <p className="text-xs text-wrap text-center">{name}</p>
       <span className="font-bold text-lg">{value}</span>
     </div>
+    </Box>
     
   );
 }
