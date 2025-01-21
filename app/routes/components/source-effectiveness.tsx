@@ -15,11 +15,11 @@ export const SourceEffectivenessChart = ({ data }: SourceEffectivenessChartProps
   const config = {
     totalApplications: {
       label: 'Total Applications',
-      color: '#0d9488',
+      color: '#0284c7',
     },
     hires: {
       label: 'Total Hired',
-      color: '#0284c7',
+      color: '#0d9488',
     },
     passThroughScore: {
       label: 'Performance',
@@ -29,7 +29,7 @@ export const SourceEffectivenessChart = ({ data }: SourceEffectivenessChartProps
 
   return (
     <>
-      <h1 className="text-xl font-bold text-center p-3">Source Effectiveness</h1>
+      <h1 className="text-lg font-bold text-center p-3">Source Effectiveness</h1>
       <ChartContainer title="Source effectiveness" config={config}>
         <ComposedChart width={800} height={400} data={data}>
           <XAxis dataKey="source" />

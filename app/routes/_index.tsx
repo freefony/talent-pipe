@@ -5,6 +5,9 @@ import { Box } from "~/components/box";
 import { Funnel, FunnelSegment } from "~/components/funnel";
 import { getApplicationAnalysis } from "~/services/applications";
 import { SourceEffectivenessChart } from "./components/source-effectiveness";
+import { Area, AreaChart, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { ChartContainer } from "~/components/ui/chart";
+import { TimeToHireTrend } from "./components/time-to-hire-trend";
 
 export const meta: MetaFunction = () => {
   return [
@@ -24,13 +27,12 @@ export default function Index() {
   const { data } = useLoaderData<typeof loader>();
 
   return (
-    <div className=" h-screen">
+    <div className="min-h-screen">
       <Box className="p-6">Header</Box>
 
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={data}>
-          {({ progression, applicationCount, sourceEffectiveness }) => {
-            
+          {({ progression, applicationCount, sourceEffectiveness, timeToHireTrend }) => {
             // layout
             return (<div className="grid grid-cols-1 md:grid-cols-4 gap-3 w-full p-3">
               <Box className="col-span-1 md:col-span-4 p-6 rounded-lg">
@@ -51,7 +53,7 @@ export default function Index() {
                 </Funnel>
               </Box>
               <Box className="col-span-1 md:col-span-2">
-                
+               <TimeToHireTrend timeToHireTrend={timeToHireTrend} />
               </Box>
               <Box className="col-span-1 md:col-span-2">
                 <SourceEffectivenessChart data={sourceEffectiveness} />

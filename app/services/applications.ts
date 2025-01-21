@@ -1,6 +1,7 @@
 import applications from 'fixtures/applications.json';
 import { applicationStages } from '~/libs/application';
 import { ApplicationStage } from '~/models/applications';
+import { TimeToHireTrend } from '~/routes/components/time-to-hire-trend';
 
 
 type SourceEffectiveness = {
@@ -11,9 +12,19 @@ type SourceEffectiveness = {
   totalStagesCompletedCount: number;
 }
 
+export type TimeToHireTrendProps = {
+  monthYear: string,
+  averageTimeToHire: number,
+  maxTimeToHire: number,
+  minTimeToHire: number,
+  dateTime: number,
+  totalHires: number
+}
+
 export async function getApplicationAnalysis() {
   const progressionMap = new Map<ApplicationStage, { name: ApplicationStage, value: number }>();
   const sourceEffectiveness = new Map<string, SourceEffectiveness>();
+  const timeToHireTrend = new Map<string, TimeToHireTrendProps>();
 
   applications.forEach((application) => {
 
@@ -25,6 +36,33 @@ export async function getApplicationAnalysis() {
         progressionMap.set(stage.name, { name: stage.name, value: 1 });
       }
     });
+
+    // time to hire trends
+    if (application.outcome === 'hired') {
+      const startDate = new Date(application.created_at)
+      const hiredDate = new Date(application.closed_at)
+      const hiredMonthYear = hiredDate.toLocaleDateString('default', { month: 'short', year: 'numeric' })
+      const timeToHire = Math.ceil((hiredDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) // in days
+
+      //ave time to hire per month
+      if (timeToHireTrend.has(hiredMonthYear)) {
+        const timeToHireRecord = timeToHireTrend.get(hiredMonthYear)!;
+
+        timeToHireRecord.averageTimeToHire = (timeToHireRecord.averageTimeToHire + timeToHire) / 2;
+        timeToHireRecord.maxTimeToHire = Math.max(timeToHireRecord.maxTimeToHire, timeToHire);
+        timeToHireRecord.minTimeToHire = Math.min(timeToHireRecord.minTimeToHire, timeToHire);
+        timeToHireRecord.totalHires += 1;
+      } else {
+        timeToHireTrend.set(hiredMonthYear, {
+          monthYear: hiredMonthYear,
+          averageTimeToHire: timeToHire,
+          maxTimeToHire: timeToHire,
+          minTimeToHire: timeToHire,
+          dateTime: startDate.getTime(),
+          totalHires: 1
+        });
+      }
+    }
 
 
     // source effectiveness
@@ -69,6 +107,9 @@ export async function getApplicationAnalysis() {
   return {
     progression: Array.from(progressionMap.values()),
     applicationCount: applications.length,
-    sourceEffectiveness: Array.from(sourceEffectiveness.values())
+    sourceEffectiveness: Array.from(sourceEffectiveness.values()),
+    timeToHireTrend: Array.from(timeToHireTrend.values()).sort((a, b) => {
+      return a.dateTime - b.dateTime
+    })
   };
 }
