@@ -32,19 +32,27 @@ export default function Index() {
           {({ progression, applicationCount, sourceEffectiveness }) => {
             
             // layout
-            return (<div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full p-4">
-              <Box className="col-span-1 md:col-span-3 p-6 rounded-lg">
+            return (<div className="grid grid-cols-1 md:grid-cols-4 gap-3 w-full p-3">
+              <Box className="col-span-1 md:col-span-4 p-6 rounded-lg">
                 <h1 className="text-lg font-bold text-center p-3">Talent pipeline progression and pass-through rates by stages</h1>
                 <Funnel load={applicationCount} segments={progression.length}>
                   {progression.map((item, index) => {
                     const passThroughRate = index === 0 ? 0 : (item.value / progression[index - 1].value ) *  100
                     return (
-                    <FunnelSegment key={index} name={item.name} value={item.value} sup={<span className="text-xs text-center">{Math.round(passThroughRate)}%</span>} />
+                    <FunnelSegment 
+                      key={index} 
+                      name={item.name} 
+                      value={item.value} 
+                      sup={<span className="text-xs text-center">{Math.round(passThroughRate)}%</span>} 
+                      className="bg-slate-200" 
+                      />
                   )
                   })}
                 </Funnel>
               </Box>
-              <Box></Box>
+              <Box className="col-span-1 md:col-span-2">
+                
+              </Box>
               <Box className="col-span-1 md:col-span-2">
                 <SourceEffectivenessChart data={sourceEffectiveness} />
               </Box>
