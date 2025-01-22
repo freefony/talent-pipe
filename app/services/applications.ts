@@ -1,7 +1,6 @@
 import applications from 'fixtures/applications.json';
 import { applicationStages } from '~/libs/application';
 import { ApplicationStage } from '~/models/applications';
-import { TimeToHireTrend } from '~/routes/components/time-to-hire-trend';
 
 
 type SourceEffectiveness = {
@@ -32,6 +31,7 @@ export async function getApplicationAnalysis(filters?: Filters) {
   const progressionMap = new Map<ApplicationStage, { name: ApplicationStage, value: number }>();
   const sourceEffectiveness = new Map<string, SourceEffectiveness>();
   const timeToHireTrend = new Map<string, TimeToHireTrendProps>();
+  let applicationCount = 0
 
   for (const application of applications) {
 
@@ -45,6 +45,8 @@ export async function getApplicationAnalysis(filters?: Filters) {
         if (applicationDate.getTime() > new Date(filters.byDate.to).getTime()) continue;
       }
     }
+
+    applicationCount++;
 
     // Progression by stage
     application.stages.forEach((stage) => {
@@ -113,7 +115,7 @@ export async function getApplicationAnalysis(filters?: Filters) {
 
   return {
     progression: Array.from(progressionMap.values()),
-    applicationCount: applications.length,
+    applicationCount,
     sourceEffectiveness: Array.from(sourceEffectiveness.values()),
     timeToHireTrend: Array.from(timeToHireTrend.values()).sort((a, b) => {
       return a.dateTime - b.dateTime
