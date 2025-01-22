@@ -25,8 +25,9 @@ type Filters = {
   byDate?: {
     from?: string,
     to?: string
-  },
+  }
   byLevel?: string
+  bySource?: string
 }
 
 export async function getApplicationAnalysis(filters?: Filters) {
@@ -53,6 +54,10 @@ export async function getApplicationAnalysis(filters?: Filters) {
       if (!job) continue;
 
       if (job.title.replaceAll(' ', '-') !== filters.byLevel) continue;
+    }
+
+    if (filters?.bySource) {
+      if (application.source !== filters.bySource) continue;
     }
 
     applicationCount++;
