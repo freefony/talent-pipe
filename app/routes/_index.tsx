@@ -7,6 +7,7 @@ import { getApplicationAnalysis } from "~/services/applications";
 import { SourceEffectivenessChart } from "./components/source-effectiveness";
 import { TimeToHireTrend } from "./components/time-to-hire-trend";
 import { FilterApplicationsByDates } from "./components/filters/by-dates";
+import { FilterApplicationsByLevels } from "./components/filters/by-levels";
 
 export const meta: MetaFunction = () => {
   return [
@@ -19,8 +20,9 @@ export function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const from = url.searchParams.get("from") || undefined; 
   const to = url.searchParams.get("to") || undefined;
+  const level = url.searchParams.get("level") || undefined;
 
-  return { data: getApplicationAnalysis({ byDate: { from, to }}) }
+  return { data: getApplicationAnalysis({ byDate: { from, to }, byLevel: level }) }
 }
 
 
@@ -43,6 +45,7 @@ export default function Index() {
                 <h1 className="text-lg font-bold p-3">Filters:</h1>
                 <Box className="flex gap-6 items-center">
                   <FilterApplicationsByDates />
+                  <FilterApplicationsByLevels />
                 </Box>
               </Box>
               <Box className="col-span-1 md:col-span-4 p-6 rounded-lg">

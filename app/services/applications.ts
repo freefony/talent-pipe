@@ -1,6 +1,7 @@
 import applications from 'fixtures/applications.json';
 import { applicationStages } from '~/libs/application';
 import { ApplicationStage } from '~/models/applications';
+import { getJob } from './jobs';
 
 
 type SourceEffectiveness = {
@@ -24,7 +25,8 @@ type Filters = {
   byDate?: {
     from?: string,
     to?: string
-  }
+  },
+  byLevel?: string
 }
 
 export async function getApplicationAnalysis(filters?: Filters) {
@@ -44,6 +46,13 @@ export async function getApplicationAnalysis(filters?: Filters) {
       if (filters.byDate.to) {
         if (applicationDate.getTime() > new Date(filters.byDate.to).getTime()) continue;
       }
+    }
+
+    if (filters?.byLevel) {
+      const job = await getJob(application.job);
+      if (!job) continue;
+
+      if (job.title.replaceAll(' ', '-') !== filters.byLevel) continue;
     }
 
     applicationCount++;
