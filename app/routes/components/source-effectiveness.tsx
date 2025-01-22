@@ -1,6 +1,4 @@
-import { l } from 'node_modules/vite/dist/node/types.d-aGj9QkWt';
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Line, ComposedChart, Area } from 'recharts';
+import { Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, Area } from 'recharts';
 import { ChartConfig, ChartContainer } from '~/components/ui/chart';
 
 type SourceEffectivenessChartProps = {

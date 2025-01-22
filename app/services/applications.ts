@@ -21,12 +21,30 @@ export type TimeToHireTrendProps = {
   totalHires: number
 }
 
-export async function getApplicationAnalysis() {
+type Filters = {
+  byDate?: {
+    from?: string,
+    to?: string
+  }
+}
+
+export async function getApplicationAnalysis(filters?: Filters) {
   const progressionMap = new Map<ApplicationStage, { name: ApplicationStage, value: number }>();
   const sourceEffectiveness = new Map<string, SourceEffectiveness>();
   const timeToHireTrend = new Map<string, TimeToHireTrendProps>();
 
-  applications.forEach((application) => {
+  for (const application of applications) {
+
+    if (filters?.byDate) {
+      const applicationDate = new Date(application.created_at);
+      if (filters.byDate.from) {
+        if (applicationDate.getTime() < new Date(filters.byDate.from).getTime()) continue;
+      }
+
+      if (filters.byDate.to) {
+        if (applicationDate.getTime() > new Date(filters.byDate.to).getTime()) continue;
+      }
+    }
 
     // Progression by stage
     application.stages.forEach((stage) => {
@@ -91,18 +109,7 @@ export async function getApplicationAnalysis() {
     }
 
 
-  });
-
-  const getTimeToHireTrend = () => {
-    const dates = applications.map((application) => {
-      const date = new Date(application.stages[application.stages.length - 1].date);
-      return date.getTime();
-    });
-    const maxDate = Math.max(...dates);
-    const minDate = Math.min(...dates);
-    const timeToHire = (maxDate - minDate) / 86400000;
-    return timeToHire;
-  }
+  };
 
   return {
     progression: Array.from(progressionMap.values()),
