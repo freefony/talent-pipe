@@ -6,9 +6,6 @@ import { Funnel, FunnelSegment } from "~/components/funnel";
 import { getApplicationAnalysis } from "~/services/applications";
 import { SourceEffectivenessChart } from "./components/source-effectiveness";
 import { TimeToHireTrend } from "./components/time-to-hire-trend";
-import { DateRangePicker } from "~/components/date-range-picker";
-import { Select, SelectTrigger, SelectValue } from "~/components/ui/select";
-import { Filters } from "./components/filters";
 import { FilterApplicationsByDates } from "./components/filters/by-dates";
 
 export const meta: MetaFunction = () => {
